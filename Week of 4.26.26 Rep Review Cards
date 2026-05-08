@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1:1 Review Cards — Week of April 26, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; padding: 24px 20px; }
+  .header { text-align: center; margin-bottom: 28px; }
+  .header h1 { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #6366f1; margin-bottom: 6px; }
+  .header h2 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+  .header p { font-size: 12px; color: #999; margin-top: 4px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
+  .tab { padding: 8px 16px; border-radius: 999px; border: 1.5px solid #dde0ef; background: #fff; color: #888; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .tab:hover { border-color: #6366f1; color: #6366f1; }
+  .tab.active { background: #6366f1; border-color: #6366f1; color: #fff; }
+  .card { display: none; }
+  .card.active { display: block; }
+  .rep-card { background: #fff; border: 1px solid #dde0ef; border-radius: 16px; overflow: hidden; max-width: 760px; margin: 0 auto; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .card-header { padding: 20px 24px 16px; border-bottom: 1px solid #eaecf2; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; background: #f8f9fe; }
+  .rep-name { font-size: 20px; font-weight: 700; color: #1a1a2e; }
+  .rep-week { font-size: 11px; color: #999; margin-top: 3px; letter-spacing: 1px; text-transform: uppercase; }
+  .overall-badge { padding: 6px 14px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
+  .badge-strong { background: #dcfce7; color: #166534; }
+  .badge-mixed { background: #fef9c3; color: #854d0e; }
+  .badge-behind { background: #fee2e2; color: #991b1b; }
+  .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid #eaecf2; }
+  .metric-cell { padding: 14px 16px; border-right: 1px solid #eaecf2; }
+  .metric-cell:last-child { border-right: none; }
+  .metric-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+  .metric-val { font-size: 20px; font-weight: 700; color: #1a1a2e; line-height: 1; }
+  .metric-val.green { color: #16a34a; }
+  .metric-val.yellow { color: #b45309; }
+  .metric-val.red { color: #dc2626; }
+  .metric-delta { font-size: 11px; margin-top: 4px; font-family: 'DM Mono', monospace; }
+  .delta-up { color: #16a34a; }
+  .delta-down { color: #dc2626; }
+  .delta-flat { color: #aaa; }
+  .activity-section { padding: 16px 20px; border-bottom: 1px solid #eaecf2; background: #fafbfe; }
+  .section-title { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #6366f1; margin-bottom: 12px; }
+  .activity-bars { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { font-size: 11px; color: #666; width: 80px; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 7px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-fill.green { background: #16a34a; }
+  .bar-fill.yellow { background: #d97706; }
+  .bar-fill.red { background: #dc2626; }
+  .bar-val { font-size: 11px; font-family: 'DM Mono', monospace; color: #555; width: 110px; text-align: right; flex-shrink: 0; }
+  .results-section { padding: 16px 20px; border-bottom: 1px solid #eaecf2; }
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .result-box { background: #f8f9fe; border-radius: 10px; padding: 14px 16px; border: 1px solid #eaecf2; }
+  .result-box-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+  .result-box-main { display: flex; align-items: baseline; gap: 8px; }
+  .result-num { font-size: 28px; font-weight: 700; line-height: 1; }
+  .result-target { font-size: 12px; color: #aaa; }
+  .result-pct { display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .pct-green { background: #dcfce7; color: #166534; }
+  .pct-yellow { background: #fef9c3; color: #854d0e; }
+  .pct-red { background: #fee2e2; color: #991b1b; }
+  .notes-section { padding: 16px 20px; background: #fafbfe; }
+  .note-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+  .note-item:last-child { margin-bottom: 0; }
+  .note-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .note-text { font-size: 12.5px; color: #444; line-height: 1.6; }
+  .note-text strong { color: #1a1a2e; }
+  .print-bar { max-width: 760px; margin: 16px auto 0; display: flex; justify-content: flex-end; }
+  .print-btn { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; padding: 7px 16px; border-radius: 999px; border: 1.5px solid #dde0ef; background: #fff; color: #888; cursor: pointer; transition: all 0.2s; }
+  .print-btn:hover { border-color: #6366f1; color: #6366f1; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>1:1 Review Cards</h1>
+  <h2>Week of April 26, 2026</h2>
+  <p>Select a rep to review their individual breakdown</p>
+</div>
+<div class="tabs">
+  <button class="tab active" onclick="showRep('paul',this)">Paul R.</button>
+  <button class="tab" onclick="showRep('katie',this)">Katie Z.</button>
+  <button class="tab" onclick="showRep('briana',this)">Briana T.</button>
+  <button class="tab" onclick="showRep('claire',this)">Claire M.</button>
+  <button class="tab" onclick="showRep('virginia',this)">Virginia B.</button>
+  <button class="tab" onclick="showRep('jaxton',this)">Jaxton D.</button>
+  <button class="tab" onclick="showRep('aaron',this)">Aaron S.</button>
+</div>
+
+<!-- PAUL: emails 11497 ≥7500=green, inmails 206 ≥200=green, calls 112 ≥100=green, contacts 601 ≥150=green -->
+<div class="card active" id="card-paul">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Paul Rasimowicz</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-strong">Strong Week</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val green">11,497</div><div class="metric-delta delta-up">+383 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val green">112</div><div class="metric-delta delta-up">+108 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val green">206</div><div class="metric-delta delta-flat">0.97% accept</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">601</div><div class="metric-delta delta-up">503 added / 98 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">11,497 / 7,500 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">112 / 100 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">206 / 200 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">601 / 150 ✓</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">21</span><span class="result-target">target: 11</span></div><div><span class="result-pct pct-green">191% of target</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+12 vs prior week (9)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#b45309;">6</span><span class="result-target">target: 9</span></div><div><span class="result-pct pct-yellow">67% of target</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+4 vs prior week (2)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;font-size:22px;">$89,454</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+$62,538 vs prior ($26,916)</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#b45309;">29%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">6 SQO from 21 SAO</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>Best week of the quarter</strong> — 21 SAOs against a target of 11. Every activity target hit. This is what it looks like when all channels fire together.</span></div>
+      <div class="note-item"><span class="note-icon">🟡</span><span class="note-text"><strong>Bump conversion is the next lever</strong> — 21 SAOs producing only 6 SQOs (29%). The opps are there; advancing them is the priority for next week.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> What changed this week vs. prior weeks? Which channel drove the most SAOs? Can we document and share this approach with the team?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- KATIE: emails 7924 ≥7500=green, inmails 298 ≥200=green, calls 116 ≥100=green, contacts 224 ≥150=green -->
+<div class="card" id="card-katie">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Katie Zimmerman</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-mixed">Mixed Week</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val green">7,924</div><div class="metric-delta delta-up">+171 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val green">116</div><div class="metric-delta delta-up">+4 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val green">298</div><div class="metric-delta delta-flat">1.01% accept</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">224</div><div class="metric-delta delta-flat">224 added / 0 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">7,924 / 7,500 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">116 / 100 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">298 / 200 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">224 / 150 ✓</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">8</span><span class="result-target">target: 6</span></div><div><span class="result-pct pct-green">133% of target</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+1 vs prior week (7)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#dc2626;">2</span><span class="result-target">target: 5</span></div><div><span class="result-pct pct-red">40% of target</span></div><div class="metric-delta delta-down" style="margin-top:6px;font-size:11px;">-5 vs prior week (7)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#aaa;font-size:22px;">—</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Not reported this week</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#dc2626;">25%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">2 SQO from 8 SAO</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>All activity targets hit</strong> — clean green across emails, calls, InMails, and contacts. SAOs at 133% of target.</span></div>
+      <div class="note-item"><span class="note-icon">🔴</span><span class="note-text"><strong>SQO drop is the key issue</strong> — fell from 7 to 2 WoW. 8 SAOs should generate more than 2 SQOs. Opps are being created but not advancing.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> Walk through the 8 SAOs — what stage is each at? Are they being followed up on promptly? Is there a pattern in which accounts aren't converting to SQOs?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIANA: emails 9528 ≥7500=green, inmails 284 ≥200=green, calls 104 ≥100=green, contacts 158 ≥150=green -->
+<div class="card" id="card-briana">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Briana Torres</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-strong">Bounce Back Week</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val green">9,528</div><div class="metric-delta delta-up">+1,761 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val green">104</div><div class="metric-delta delta-up">+70 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val green">284</div><div class="metric-delta delta-flat">2.11% accept</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">158</div><div class="metric-delta delta-flat">63 added / 95 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">9,528 / 7,500 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">104 / 100 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">284 / 200 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">158 / 150 ✓</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">7</span><span class="result-target">target: 7</span></div><div><span class="result-pct pct-green">100% of target</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+7 vs prior week (0)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">5</span><span class="result-target">target: 5</span></div><div><span class="result-pct pct-green">100% of target</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Flat vs prior week (5)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;font-size:22px;">$10,023</span></div><div class="metric-delta delta-down" style="margin-top:6px;font-size:11px;">-$2,392 vs prior ($12,415)</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">71%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">5 SQO from 7 SAO — best on team</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>Best bounce-back of the week</strong> — 0 SAOs last week to 7 this week, hitting target exactly. All activity and result targets hit. 71% SAO→SQO conversion is the best on the team.</span></div>
+      <div class="note-item"><span class="note-icon">🟡</span><span class="note-text"><strong>Contacts just at target</strong> — 158 vs. 150. Good, but only 63 newly added. Building the prospecting list wider will sustain this output going forward.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> What drove the turnaround from last week? Your 71% conversion rate is the best on the team — what does your follow-up approach look like?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CLAIRE: emails 9121 ≥7500=green, inmails 216 ≥200=green, calls 106 ≥100=green, contacts 253 ≥150=green -->
+<div class="card" id="card-claire">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Claire McDonough</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-strong">Consistent ✓</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val green">9,121</div><div class="metric-delta delta-up">+831 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val green">106</div><div class="metric-delta delta-up">+8 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val green">216</div><div class="metric-delta delta-flat">0.46% accept</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">253</div><div class="metric-delta delta-flat">89 added / 164 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">9,121 / 7,500 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">106 / 100 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">216 / 200 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">253 / 150 ✓</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">5</span><span class="result-target">target: 5</span></div><div><span class="result-pct pct-green">100% of target</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Flat vs prior week (5)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">7</span><span class="result-target">target: 4</span></div><div><span class="result-pct pct-green">175% of target</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+2 vs prior week (5)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;font-size:22px;">$8,998</span></div><div class="metric-delta delta-down" style="margin-top:6px;font-size:11px;">-$38,927 vs prior ($47,925)</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">140%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">7 SQO from 5 SAO (prior pipeline)</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>Fourth consecutive week hitting every target</strong> — SAO and SQO both hit or exceeded, all activity green. 7 SQOs from 5 SAOs means she's advancing prior pipeline effectively.</span></div>
+      <div class="note-item"><span class="note-icon">🟡</span><span class="note-text"><strong>InMail accept rate (0.46%) lowest on team</strong> — high volume but low conversion. Worth reviewing LinkedIn messaging or targeting approach.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> How are you prioritizing which SAOs to advance to SQO? Can we share your follow-up approach on the next team call?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIRGINIA: emails 4503 <3750=red, inmails 202 ≥200=green, calls 100 ≥100=green, contacts 180 ≥150=green -->
+<div class="card" id="card-virginia">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Virginia Bingol</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-mixed">Mixed Week</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val red">4,503</div><div class="metric-delta delta-down">-3,796 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val green">100</div><div class="metric-delta delta-flat">Flat vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val green">202</div><div class="metric-delta delta-flat">3.47% accept</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">180</div><div class="metric-delta delta-flat">58 added / 122 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill red" style="width:60%"></div></div><span class="bar-val">4,503 / 7,500</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">100 / 100 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">202 / 200 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">180 / 150 ✓</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#b45309;">5</span><span class="result-target">target: 6</span></div><div><span class="result-pct pct-yellow">83% of target</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+2 vs prior week (3)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#b45309;">3</span><span class="result-target">target: 5</span></div><div><span class="result-pct pct-yellow">60% of target</span></div><div class="metric-delta delta-down" style="margin-top:6px;font-size:11px;">-2 vs prior week (5)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#aaa;font-size:22px;">—</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Not reported this week</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#b45309;">60%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">3 SQO from 5 SAO</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>Best InMail acceptance rate on the team (3.47%)</strong> — 202 sent and converting well. Calls, contacts, and InMails all on target. SAOs trending up (+2 WoW).</span></div>
+      <div class="note-item"><span class="note-icon">🔴</span><span class="note-text"><strong>Email volume is a concern</strong> — 4,503 vs. 7,500 target, down sharply from 8,299 last week. This needs a clear explanation and a plan to get back to target.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> What happened to email volume this week? Your InMail rate is the best on the team — are you leaning into that deliberately, or is something blocking email throughput?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- JAXTON: emails 4773 <3750=red, inmails 9 <100=red, calls 33 <50=red, contacts 170 ≥150=green -->
+<div class="card" id="card-jaxton">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Jaxton Doher</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-behind">Needs Attention</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val red">4,773</div><div class="metric-delta delta-down">-1,896 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val red">33</div><div class="metric-delta delta-up">+19 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val red">9</div><div class="metric-delta delta-flat">11.1% accept</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">170</div><div class="metric-delta delta-flat">102 added / 68 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill red" style="width:64%"></div></div><span class="bar-val">4,773 / 7,500</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill red" style="width:33%"></div></div><span class="bar-val">33 / 100</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill red" style="width:5%"></div></div><span class="bar-val">9 / 200</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">170 / 150 ✓</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#b45309;">4</span><span class="result-target">target: 5</span></div><div><span class="result-pct pct-yellow">80% of target</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Flat vs prior week (4)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">4</span><span class="result-target">target: 4</span></div><div><span class="result-pct pct-green">100% of target</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Flat vs prior week (4)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#aaa;font-size:22px;">—</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Not reported this week</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">100%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">4 SQO from 4 SAO</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>100% SAO→SQO conversion and SQO target hit</strong> — every opp created is advancing. Contacts also hit target (170). The quality of output is high.</span></div>
+      <div class="note-item"><span class="note-icon">🔴</span><span class="note-text"><strong>Activity volume is the critical issue</strong> — emails at 64% of target, calls at 33%, InMails at just 9. Getting good results with low input isn't sustainable and leaves significant upside on the table.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> Your conversion rate is exceptional — what's blocking you from increasing volume? What would it take to get emails to 7,500 and calls to 80+ next week?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- AARON: emails 7584 ≥7500=green, inmails 44 <100=red, calls 101 ≥100=green, contacts 1920 ≥150=green -->
+<div class="card" id="card-aaron">
+  <div class="rep-card">
+    <div class="card-header"><div><div class="rep-name">Aaron Sakhai</div><div class="rep-week">Week of Apr 26 · vs Apr 19</div></div><span class="overall-badge badge-behind">Needs Attention</span></div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-label">Emails</div><div class="metric-val green">7,584</div><div class="metric-delta delta-down">-875 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Cold Calls</div><div class="metric-val green">101</div><div class="metric-delta delta-flat">Flat vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">InMails</div><div class="metric-val red">44</div><div class="metric-delta delta-down">-329 vs prior</div></div>
+      <div class="metric-cell"><div class="metric-label">Contacts</div><div class="metric-val green">1,920</div><div class="metric-delta delta-flat">1 added / 1,919 mod</div></div>
+    </div>
+    <div class="activity-section"><div class="section-title">Activity vs Target</div><div class="activity-bars">
+      <div class="bar-row"><span class="bar-label">Emails</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">7,584 / 7,500 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">Cold Calls</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">101 / 100 ✓</span></div>
+      <div class="bar-row"><span class="bar-label">InMails</span><div class="bar-track"><div class="bar-fill red" style="width:22%"></div></div><span class="bar-val">44 / 200</span></div>
+      <div class="bar-row"><span class="bar-label">Contacts</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">1,920 / 150 ✓*</span></div>
+    </div></div>
+    <div class="results-section"><div class="section-title">Results</div><div class="results-grid">
+      <div class="result-box"><div class="result-box-label">Opps Created (SAO)</div><div class="result-box-main"><span class="result-num" style="color:#dc2626;">1</span><span class="result-target">target: 5</span></div><div><span class="result-pct pct-red">20% of target</span></div><div class="metric-delta delta-down" style="margin-top:6px;font-size:11px;">-5 vs prior week (6)</div></div>
+      <div class="result-box"><div class="result-box-label">Bumps (SQO)</div><div class="result-box-main"><span class="result-num" style="color:#dc2626;">2</span><span class="result-target">target: 4</span></div><div><span class="result-pct pct-red">50% of target</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">Flat vs prior week (2)</div></div>
+      <div class="result-box"><div class="result-box-label">Field Bookings</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;font-size:22px;">$89,454</span></div><div class="metric-delta delta-up" style="margin-top:6px;font-size:11px;">+$62,538 vs prior ($26,916)</div></div>
+      <div class="result-box"><div class="result-box-label">SAO→SQO Conversion</div><div class="result-box-main"><span class="result-num" style="color:#16a34a;">200%</span></div><div class="metric-delta delta-flat" style="margin-top:6px;font-size:11px;">2 SQO from 1 SAO (prior pipeline)</div></div>
+    </div></div>
+    <div class="notes-section"><div class="section-title">Coaching Notes</div>
+      <div class="note-item"><span class="note-icon">🟢</span><span class="note-text"><strong>Field bookings are outstanding</strong> — $89,454, leading the team. Existing pipeline is converting to revenue strongly. Emails and calls both hit target.</span></div>
+      <div class="note-item"><span class="note-icon">🔴</span><span class="note-text"><strong>SAO output collapsed and InMails dropped sharply</strong> — 1 SAO against a target of 5, down from 6 last week. InMails fell from 373 to 44. The bookings are masking a top-of-funnel gap that will show in future weeks without new pipeline being built now.</span></div>
+      <div class="note-item"><span class="note-icon">💬</span><span class="note-text"><strong>Ask:</strong> What deals closed this week to drive bookings? With only 1 SAO, what's the plan to replenish pipeline? And the 1,920 contacts — 1,919 modified vs. only 1 added — are these existing contacts being re-engaged rather than new prospects being added?</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="print-bar">
+  <button class="print-btn" onclick="window.print()">Print current card</button>
+</div>
+<script>
+function showRep(id, el) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('card-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
