@@ -1,609 +1,369 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1:1 Review Cards — Week of May 25, 2026</title>
+<!doctype html><html><head><meta charset="utf-8"><title>Rep Scorecards · Week of May 25, 2026</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #f0f2f5; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #1a1a2e; }
-  .page-header { background: #1a1a2e; padding: 28px 36px 22px; text-align: center; }
-  .page-header .eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7b8cde; margin-bottom: 6px; }
-  .page-header h1 { font-size: 22px; font-weight: 700; color: #fff; }
-  .page-header .sub { font-size: 13px; color: #a0aac8; margin-top: 6px; }
-  .tab-bar { background: #fff; border-bottom: 2px solid #dde0ef; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-  .tab-btn { padding: 7px 16px; border-radius: 20px; border: 1.5px solid #dde0ef; background: #f4f5fb; color: #555; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-  .tab-btn:hover { background: #e8eaf6; border-color: #7b8cde; }
-  .tab-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
-  .cards-container { max-width: 860px; margin: 0 auto; padding: 28px 16px 48px; }
-  .rep-card { display: none; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.09); }
-  .rep-card.active { display: block; }
-  .card-header { padding: 20px 28px 16px; border-bottom: 2px solid #eaecf2; }
-  .card-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-  .card-header h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; }
-  .card-header .week-label { font-size: 12px; color: #888; }
-  .status-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px; }
-  .status-green { background: #e8f8f0; color: #0f6e56; }
-  .status-amber { background: #fff8e1; color: #854f0b; }
-  .status-red { background: #ffeaea; color: #a32d2d; }
-  .section { padding: 18px 28px; border-bottom: 1px solid #eaecf2; }
-  .section:last-child { border-bottom: none; }
-  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #7b8cde; margin-bottom: 14px; }
-  .activity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
-  .activity-tile { background: #f4f5fb; border-radius: 8px; padding: 10px 12px; }
-  .activity-tile .label { font-size: 11px; color: #888; margin-bottom: 4px; }
-  .activity-tile .value { font-size: 20px; font-weight: 700; color: #1a1a2e; }
-  .activity-tile .delta { font-size: 11px; margin-top: 3px; }
-  .delta-up { color: #27a96c; }
-  .delta-down { color: #e05c5c; }
-  .delta-flat { color: #888; }
-  .target-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .target-table th { text-align: left; padding: 7px 10px; color: #555; font-weight: 600; background: #f4f5fb; border-bottom: 2px solid #dde0ef; }
-  .target-table th.r { text-align: right; }
-  .target-table td { padding: 7px 10px; border-bottom: 1px solid #eef0f6; color: #1a1a2e; }
-  .target-table td.r { text-align: right; }
-  .target-table tr:last-child td { border-bottom: none; }
-  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
-  .pill-g { background: #e8f8f0; color: #0f6e56; }
-  .pill-a { background: #fff8e1; color: #854f0b; }
-  .pill-r { background: #ffeaea; color: #a32d2d; }
-  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .result-tile { border-radius: 8px; padding: 12px 14px; }
-  .result-tile .r-label { font-size: 11px; color: #888; margin-bottom: 4px; }
-  .result-tile .r-value { font-size: 22px; font-weight: 700; }
-  .result-tile .r-target { font-size: 11px; color: #888; }
-  .result-tile .r-delta { font-size: 11px; margin-top: 4px; }
-  .result-tile .r-note { font-size: 11px; color: #666; margin-top: 4px; }
-  .tile-green { background: #e8f8f0; } .tile-green .r-value { color: #0f6e56; }
-  .tile-amber { background: #fff8e1; } .tile-amber .r-value { color: #854f0b; }
-  .tile-red { background: #ffeaea; } .tile-red .r-value { color: #a32d2d; }
-  .tile-neutral { background: #f4f5fb; } .tile-neutral .r-value { color: #1a1a2e; }
-  .qtd-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .qtd-item { background: #f4f5fb; border-radius: 8px; padding: 12px 14px; }
-  .qtd-item .q-label { font-size: 11px; color: #888; margin-bottom: 4px; }
-  .qtd-item .q-value { font-size: 18px; font-weight: 700; }
-  .qtd-item .q-note { font-size: 11px; color: #666; margin-top: 4px; }
-  .bookings-row { display: flex; gap: 12px; margin-top: 12px; }
-  .bookings-tile { flex: 1; background: #f4f5fb; border-radius: 8px; padding: 12px 14px; }
-  .bookings-tile .b-label { font-size: 11px; color: #888; margin-bottom: 4px; }
-  .bookings-tile .b-value { font-size: 18px; font-weight: 700; color: #1a1a2e; }
-  .bookings-tile .b-note { font-size: 11px; color: #666; margin-top: 4px; }
-  .coaching-item { display: flex; gap: 10px; margin-bottom: 12px; line-height: 1.65; }
-  .coaching-item:last-child { margin-bottom: 0; }
-  .coaching-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-  .coaching-text { font-size: 13.5px; color: #2d2d44; }
-  .coaching-text strong { font-weight: 700; }
-  .ask-box { background: #f4f5fb; border-left: 3px solid #7b8cde; border-radius: 0 6px 6px 0; padding: 12px 16px; margin-top: 14px; font-size: 13px; color: #2d2d44; line-height: 1.7; }
-  .ask-box strong { color: #534AB7; }
-  @media print { .tab-bar { display: none; } .rep-card { display: block !important; page-break-after: always; } }
-</style>
-</head>
-<body>
 
-<div class="page-header">
-  <div class="eyebrow">1:1 Review Cards</div>
-  <h1>Week of May 25, 2026</h1>
-  <div class="sub">Select a rep to review their individual breakdown</div>
+    * { box-sizing: border-box; }
+    body { margin:0; background:#f0f2f5; font-family:'Segoe UI',Helvetica,Arial,sans-serif; color:#222; }
+    .page { max-width:920px; margin:0 auto; padding:0 0 40px 0; }
+    .pagehead { background:#1a1a2e; color:#fff; padding:22px 30px; }
+    .pagehead .eyebrow { color:#7b8cde; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; }
+    .pagehead .title { font-size:22px; font-weight:600; margin-top:5px; }
+    .pagehead .subline { color:#a0aac8; font-size:13px; margin-top:5px; }
+    .tabbar { position:sticky; top:0; background:#ffffff; border-bottom:1px solid #e5e8f0; padding:14px 30px; z-index:5; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
+    .tab { display:inline-block; padding:8px 14px; margin:4px 6px 4px 0; background:#f4f5fb; color:#1a1a2e; border:1px solid #dde0ef; border-radius:18px; font-size:12.5px; cursor:pointer; user-select:none; font-weight:500; }
+    .tab.active { background:#1a1a2e; color:#fff; border-color:#1a1a2e; }
+    .cards { padding:18px 30px 0 30px; }
+    .card { display:none; background:#fff; border-radius:10px; box-shadow:0 2px 12px rgba(0,0,0,0.05); padding:24px 26px; margin-bottom:18px; }
+    .card.active { display:block; }
+    .cardhead { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #eef0f7; padding-bottom:14px; margin-bottom:16px; }
+    .repname { font-size:22px; font-weight:600; }
+    .repsub { color:#888; font-size:12.5px; margin-top:3px; }
+    .status { padding:6px 12px; border-radius:14px; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; }
+    .status-green { background:#e8f8f0; color:#1a7a4a; }
+    .status-amber { background:#fff8e1; color:#b8660a; }
+    .status-red   { background:#ffeaea; color:#c0392b; }
+    .seclabel { color:#7b8cde; font-size:11px; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin:18px 0 10px 0; }
+    .manager-only { color:#aaa; font-size:10.5px; font-weight:400; letter-spacing:0.3px; text-transform:none; }
+    .agrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .atile { background:#f4f5fb; border-radius:8px; padding:14px 16px; }
+    .alab { font-size:11px; color:#7b8cde; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; }
+    .aval { font-size:26px; font-weight:600; margin-top:4px; }
+    .asub { font-size:12px; color:#666; margin-top:3px; }
+    .delta-up   { color:#1a7a4a; font-weight:600; }
+    .delta-down { color:#c0392b; font-weight:600; }
+    .delta-flat { color:#888; }
+    .atargets { width:100%; border-collapse:collapse; margin-top:14px; }
+    .atargets th { background:#f4f5fb; color:#555; padding:8px 10px; font-size:11px; text-align:left; text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid #dde0ef; }
+    .atargets td { padding:8px 10px; font-size:13px; border-bottom:1px solid #eef0f7; }
+    .pill { display:inline-block; padding:3px 9px; border-radius:11px; font-size:11.5px; font-weight:600; }
+    .pill-g { background:#e8f8f0; color:#1a7a4a; }
+    .pill-a { background:#fff8e1; color:#b8660a; }
+    .pill-r { background:#ffeaea; color:#c0392b; }
+    .pill-neutral { background:#f4f5fb; color:#888; }
+    .rgrid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+    .rtile { border-radius:8px; padding:14px 16px; }
+    .rlab { font-size:11px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; opacity:0.8; }
+    .rval { font-size:26px; font-weight:600; margin-top:4px; }
+    .rsub { font-size:11.5px; opacity:0.85; margin-top:5px; }
+    .tile-green   { background:#e8f8f0; color:#1a7a4a; }
+    .tile-amber   { background:#fff8e1; color:#b8660a; }
+    .tile-red     { background:#ffeaea; color:#c0392b; }
+    .tile-neutral { background:#f4f5fb; color:#555; }
+    .qgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .qtile { border-radius:8px; padding:16px 18px; }
+    .qlab { font-size:11px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; }
+    .qval { font-size:34px; font-weight:700; margin-top:4px; }
+    .qsub { font-size:11.5px; margin-top:5px; opacity:0.85; }
+    .bkrow { display:flex; justify-content:space-between; margin-top:10px; padding:10px 14px; background:#f4f5fb; border-radius:8px; font-size:13px; }
+    .bklab { font-weight:600; color:#555; }
+    .coach { list-style:none; padding:0; margin:8px 0 0 0; }
+    .coach li { padding:10px 12px; background:#fafbfe; border-radius:8px; margin-bottom:8px; font-size:13px; line-height:1.55; }
+    .coach .emoji { display:inline-block; margin-right:6px; }
+    .ask { background:#f4f5fb; border-left:3px solid #7b8cde; padding:14px 16px; margin-top:14px; border-radius:0 8px 8px 0; }
+    .ask strong { color:#534AB7; text-transform:uppercase; letter-spacing:0.8px; font-size:12px; }
+    .ask ul { margin:8px 0 0 0; padding-left:20px; }
+    .ask li { margin-bottom:6px; font-size:13px; line-height:1.5; }
+    
+</style></head><body>
+<div class="page">
+<div class="pagehead">
+<div class="eyebrow">Rep Scorecards · 1:1 Prep</div>
+<div class="title">Week of May 25, 2026</div>
+<div class="subline">Sent June 1, 2026 · Week 8 of Q2 · Manager view</div>
+</div>
+<div class="tabbar">
+<span class="tab active" data-rep="paul" onclick="showRep('paul')">Paul R.</span>
+<span class="tab" data-rep="katie" onclick="showRep('katie')">Katie Z.</span>
+<span class="tab" data-rep="claire" onclick="showRep('claire')">Claire M.</span>
+<span class="tab" data-rep="briana" onclick="showRep('briana')">Briana T.</span>
+<span class="tab" data-rep="jaxton" onclick="showRep('jaxton')">Jaxton D.</span>
+<span class="tab" data-rep="virginia" onclick="showRep('virginia')">Virginia B.</span>
+<span class="tab" data-rep="aaron" onclick="showRep('aaron')">Aaron S.</span>
+</div>
+<div class="cards">
+<div class="card active" id="card-paul">
+<div class="cardhead">
+<div><div class="repname">Paul Rasimowicz</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-amber">Mixed Week — Math Tightening</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">9,904</div><div class="asub"><span class="delta delta-down">↓ -1,656 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">11</div><div class="asub"><span class="delta delta-down">↓ -93 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">275</div><div class="asub"><span class="delta delta-up">↑ +68 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 0.36%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">3,762</div><div class="asub"><span class="delta delta-down">↓ -17,432 W/W</span> &middot; <span style="color:#666;font-size:11px;">0 add / 3,762 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>9,904</td><td>7,500</td><td><span class="pill pill-g">132%</span></td></tr><tr><td>Cold Calls</td><td>11</td><td>100</td><td><span class="pill pill-r">11%</span></td></tr><tr><td>InMails</td><td>275</td><td>200</td><td><span class="pill pill-g">138%</span></td></tr><tr><td>Contacts</td><td>3,762</td><td>150</td><td><span class="pill pill-g">2508%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-red"><div class="rlab">Opps Created</div><div class="rval">8</div><div class="rsub">target: 22 · 36% · <span class="delta delta-down">↓ -4 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Bumps</div><div class="rval">8</div><div class="rsub">target: 19 · 42% · <span class="delta delta-flat">flat W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Meetings</div><div class="rval">5</div><div class="rsub"><span class="delta delta-down">↓ -2 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">—</div><div class="rsub">no booking this week</div></div>
+<div class="rtile tile-green"><div class="rlab">Open Rate</div><div class="rval">22.6%</div><div class="rsub">team avg 16.9% &middot; ↑ +1.1pp W/W</div></div>
+<div class="rtile tile-green"><div class="rlab">Reply Rate</div><div class="rval">1.00%</div><div class="rsub">team avg 0.45% &middot; ↑ +0.60pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-amber"><div class="qlab">Opps Created Projected</div><div class="qval">70%</div><div class="qsub">82 of 169 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-red"><div class="qlab">Bumps Projected</div><div class="qval">53%</div><div class="qsub">43 of 118 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> —</div><div><span class="bklab">QTD Field Bookings:</span> $13,919</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Email volume dominant.</strong> 13,827 emails this week — top on team, 184% of weekly target. Sustained top-of-funnel push didn't slip during the holiday week.</li>
+<li><span class="emoji">🔴</span><strong>Calls collapsed to 11.</strong> 11 cold calls vs. 104 the prior week and 102/104 the two weeks before. Memorial Day partially explains it, but other reps averaged ~88 calls in the same 4-day window.</li>
+<li><span class="emoji">🔴</span><strong>Recovery math is steep.</strong> 8 Opps vs. 22/wk needed; 8 Bumps vs. 19/wk needed. With 87 Opps and 75 Bumps to close over 4 remaining weeks, this is the biggest individual quota-recovery story on the team. QTD Opps 70% (amber), Bumps 53% (red).</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>Bumps gap is 75 over 4 weeks — that's ~19/wk vs. current 8/wk. What's the realistic path: pipeline you have today or net-new conversations?</li>
+<li>Calls 11 this past week. What's June outreach look like — phone-heavy or email-heavy? Is the call drop deliberate?</li>
+</ul></div>
+</div>
+<div class="card" id="card-katie">
+<div class="cardhead">
+<div><div class="repname">Katie Zimmerman</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-green">Career Week ★</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">8,327</div><div class="asub"><span class="delta delta-down">↓ -1,448 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">18</div><div class="asub"><span class="delta delta-down">↓ -85 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">211</div><div class="asub"><span class="delta delta-down">↓ -79 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 0.00%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">157</div><div class="asub"><span class="delta delta-up">↑ +152 W/W</span> &middot; <span style="color:#666;font-size:11px;">1 add / 156 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>8,327</td><td>7,500</td><td><span class="pill pill-g">111%</span></td></tr><tr><td>Cold Calls</td><td>18</td><td>100</td><td><span class="pill pill-r">18%</span></td></tr><tr><td>InMails</td><td>211</td><td>200</td><td><span class="pill pill-g">106%</span></td></tr><tr><td>Contacts</td><td>157</td><td>150</td><td><span class="pill pill-g">105%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-green"><div class="rlab">Opps Created</div><div class="rval">15</div><div class="rsub">target: 9 · 167% · <span class="delta delta-up">↑ +10 W/W</span></div></div>
+<div class="rtile tile-green"><div class="rlab">Bumps</div><div class="rval">9</div><div class="rsub">target: 8 · 112% · <span class="delta delta-up">↑ +7 W/W</span></div></div>
+<div class="rtile tile-green"><div class="rlab">Meetings</div><div class="rval">20</div><div class="rsub"><span class="delta delta-up">↑ +7 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">$8,475</div><div class="rsub"><span class="delta delta-up">↑ $+775 W/W</span></div></div>
+<div class="rtile tile-green"><div class="rlab">Open Rate</div><div class="rval">22.6%</div><div class="rsub">team avg 16.9% &middot; ↓ -5.1pp W/W</div></div>
+<div class="rtile tile-amber"><div class="rlab">Reply Rate</div><div class="rval">0.50%</div><div class="rsub">team avg 0.45% &middot; ↓ -0.10pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-green"><div class="qlab">Opps Created Projected</div><div class="qval">93%</div><div class="qsub">59 of 92 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-amber"><div class="qlab">Bumps Projected</div><div class="qval">74%</div><div class="qsub">33 of 64 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> $8,475</div><div><span class="bklab">QTD Field Bookings:</span> $24,344</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Top of every category.</strong> 15 Opps (167% of need), 9 Bumps (113%), and 20 Salesloft meetings (43% of the team's total 46). Pulled QTD Opps pace into green (93%). 22.6% open rate tied for best on team.</li>
+<li><span class="emoji">🟢</span><strong>Mid-funnel finally caught up.</strong> 31 Bumps still needed over 4 weeks (~8/wk) — exactly the pace she just demonstrated. If this week is repeatable, she lands at 100% on Bumps too.</li>
+<li><span class="emoji">🔴</span><strong>Calls dropped to 18.</strong> 18 cold calls vs. 103 prior week. Second time in 4 weeks under 25. If this becomes a 3-week pattern, the SAO momentum will dry up — meetings come from somewhere.</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>20 meetings is exceptional — were they all sourced this week, or pulled forward from prior outreach? What's the repeatable motion?</li>
+<li>Calls 103→18 — was that a deliberate trade for the meeting push?</li>
+</ul></div>
+</div>
+<div class="card" id="card-claire">
+<div class="cardhead">
+<div><div class="repname">Claire McDonough</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-green">Strong Week</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">7,151</div><div class="asub"><span class="delta delta-down">↓ -1,211 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">103</div><div class="asub"><span class="delta delta-up">↑ +2 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">203</div><div class="asub"><span class="delta delta-down">↓ -94 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 0.49%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">462</div><div class="asub"><span class="delta delta-up">↑ +110 W/W</span> &middot; <span style="color:#666;font-size:11px;">216 add / 246 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>7,151</td><td>7,500</td><td><span class="pill pill-a">95%</span></td></tr><tr><td>Cold Calls</td><td>103</td><td>100</td><td><span class="pill pill-g">103%</span></td></tr><tr><td>InMails</td><td>203</td><td>200</td><td><span class="pill pill-g">101%</span></td></tr><tr><td>Contacts</td><td>462</td><td>150</td><td><span class="pill pill-g">308%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-green"><div class="rlab">Opps Created</div><div class="rval">9</div><div class="rsub">target: 7 · 129% · <span class="delta delta-up">↑ +3 W/W</span></div></div>
+<div class="rtile tile-green"><div class="rlab">Bumps</div><div class="rval">6</div><div class="rsub">target: 4 · 150% · <span class="delta delta-up">↑ +2 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Meetings</div><div class="rval">6</div><div class="rsub"><span class="delta delta-up">↑ +5 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">$816</div><div class="rsub"><span class="delta delta-up">↑ $+816 W/W</span></div></div>
+<div class="rtile tile-amber"><div class="rlab">Open Rate</div><div class="rval">14.3%</div><div class="rsub">team avg 16.9% &middot; ↓ -1.0pp W/W</div></div>
+<div class="rtile tile-red"><div class="rlab">Reply Rate</div><div class="rval">0.30%</div><div class="rsub">team avg 0.45% &middot;  +0.00pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-green"><div class="qlab">Opps Created Projected</div><div class="qval">92%</div><div class="qsub">48 of 75 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-green"><div class="qlab">Bumps Projected</div><div class="qval">106%</div><div class="qsub">38 of 52 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> $816</div><div><span class="bklab">QTD Field Bookings:</span> $198,122</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Only rep clearly green on both QTD pacings.</strong> Opps 92% (green), Bumps 106% (green). Smallest weekly gap to close on the team — just 7 Opps/wk and 4 Bumps/wk needed to finish at 100%. Both well within her current pace.</li>
+<li><span class="emoji">🟢</span><strong>Activity discipline holds.</strong> 103 cold calls (target 100), 8.6k emails (115% of target). Output is matching activity — the cleanest funnel on the team this week.</li>
+<li><span class="emoji">🟡</span><strong>Bookings light at $816.</strong> Lagging indicator, not a coaching issue — but no $10k+ booking in 5 of last 6 weeks. Worth understanding if mid-funnel pipeline is mature enough to convert in June.</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>Your Bumps pace is the strongest on the team — what's the playbook? Where is it coming from?</li>
+<li>What does your June bookings forecast look like — anything past pricing/legal that should land this month?</li>
+</ul></div>
+</div>
+<div class="card" id="card-briana">
+<div class="cardhead">
+<div><div class="repname">Briana Torres</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-amber">Mixed Week — Opps Gap Widening</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">7,431</div><div class="asub"><span class="delta delta-up">↑ +1,131 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">86</div><div class="asub"><span class="delta delta-down">↓ -19 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">161</div><div class="asub"><span class="delta delta-down">↓ -240 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 1.86%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">157</div><div class="asub"><span class="delta delta-up">↑ +37 W/W</span> &middot; <span style="color:#666;font-size:11px;">125 add / 32 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>7,431</td><td>7,500</td><td><span class="pill pill-a">99%</span></td></tr><tr><td>Cold Calls</td><td>86</td><td>100</td><td><span class="pill pill-a">86%</span></td></tr><tr><td>InMails</td><td>161</td><td>200</td><td><span class="pill pill-a">80%</span></td></tr><tr><td>Contacts</td><td>157</td><td>150</td><td><span class="pill pill-g">105%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-red"><div class="rlab">Opps Created</div><div class="rval">9</div><div class="rsub">target: 14 · 64% · <span class="delta delta-up">↑ +1 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Bumps</div><div class="rval">4</div><div class="rsub">target: 11 · 36% · <span class="delta delta-up">↑ +1 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Meetings</div><div class="rval">6</div><div class="rsub"><span class="delta delta-down">↓ -5 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">$57,319</div><div class="rsub"><span class="delta delta-down">↓ $-58,100 W/W</span></div></div>
+<div class="rtile tile-amber"><div class="rlab">Open Rate</div><div class="rval">18.6%</div><div class="rsub">team avg 16.9% &middot; ↓ -0.7pp W/W</div></div>
+<div class="rtile tile-red"><div class="rlab">Reply Rate</div><div class="rval">0.20%</div><div class="rsub">team avg 0.45% &middot; ↑ +0.10pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-red"><div class="qlab">Opps Created Projected</div><div class="qval">68%</div><div class="qsub">48 of 102 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-red"><div class="qlab">Bumps Projected</div><div class="qval">61%</div><div class="qsub">30 of 71 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> $57,319</div><div><span class="bklab">QTD Field Bookings:</span> $395,217</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Best InMail conversion on team.</strong> 1.86% acceptance rate — top on team. 14 follow-up messages sent (next highest is 3). Smaller InMail volume (161 vs. team avg 226) but the targeting/messaging is clearly working. This is a playbook the team could learn from.</li>
+<li><span class="emoji">🟢</span><strong>$395k QTD bookings — leads team.</strong> $57k booked this week, fifth straight week over $40k. Pipeline from April is paying off on a consistent rhythm.</li>
+<li><span class="emoji">🔴</span><strong>Opps math just got tight.</strong> 9 Opps vs. 14/wk needed (64%). QTD Opps pace at 68% (red). Need 54 more Opps in 4 weeks against current ~9/wk pace — has to step up by ~50%. Calls also under 100 (86) for the second straight week.</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>Your InMail acceptance rate is 5x the team average — what's the targeting/messaging approach? Could you brief the team on it?</li>
+<li>Can you commit to 14 Opps/wk for the next 4 weeks? Walk me through where they come from.</li>
+</ul></div>
+</div>
+<div class="card" id="card-jaxton">
+<div class="cardhead">
+<div><div class="repname">Jaxton Doher</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-amber">Activity Steady, Mid-Funnel Stalled</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">6,622</div><div class="asub"><span class="delta delta-up">↑ +1,331 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">102</div><div class="asub"><span class="delta delta-down">↓ -13 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">253</div><div class="asub"><span class="delta delta-down">↓ -14 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 1.19%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">207</div><div class="asub"><span class="delta delta-down">↓ -3 W/W</span> &middot; <span style="color:#666;font-size:11px;">151 add / 56 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>6,622</td><td>7,500</td><td><span class="pill pill-a">88%</span></td></tr><tr><td>Cold Calls</td><td>102</td><td>100</td><td><span class="pill pill-g">102%</span></td></tr><tr><td>InMails</td><td>253</td><td>200</td><td><span class="pill pill-g">126%</span></td></tr><tr><td>Contacts</td><td>207</td><td>150</td><td><span class="pill pill-g">138%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-red"><div class="rlab">Opps Created</div><div class="rval">6</div><div class="rsub">target: 11 · 55% · <span class="delta delta-flat">flat W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Bumps</div><div class="rval">5</div><div class="rsub">target: 7 · 71% · <span class="delta delta-down">↓ -1 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Meetings</div><div class="rval">0</div><div class="rsub"><span class="delta delta-down">↓ -3 W/W</span> &middot; no meetings logged ⚠</div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">$6,525</div><div class="rsub"><span class="delta delta-up">↑ $+6,525 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Open Rate</div><div class="rval">8.7%</div><div class="rsub">team avg 16.9% &middot; ↓ -0.7pp W/W</div></div>
+<div class="rtile tile-amber"><div class="rlab">Reply Rate</div><div class="rval">0.40%</div><div class="rsub">team avg 0.45% &middot; ↑ +0.30pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-red"><div class="qlab">Opps Created Projected</div><div class="qval">69%</div><div class="qsub">39 of 82 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-amber"><div class="qlab">Bumps Projected</div><div class="qval">81%</div><div class="qsub">32 of 57 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> $6,525</div><div><span class="bklab">QTD Field Bookings:</span> $20,259</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Calls steady at 102 + best InMail conversion volume.</strong> Three weeks above 100 on calls. 253 InMails at 1.19% acceptance (3 accepted, second-best on team). Top-of-funnel motion is the strongest part of his week.</li>
+<li><span class="emoji">🔴</span><strong>Zero meetings logged in Salesloft this week.</strong> Only rep on the team with 0 meetings. Open rate also bottom of team at 8.7%. With strong call and InMail volume but no meetings, either conversations aren't progressing or they're happening outside Salesloft (uncaptured).</li>
+<li><span class="emoji">🔴</span><strong>Opps + Bumps both under target.</strong> 6 Opps vs. 11/wk needed (55%); 5 Bumps vs. 7/wk needed (71%). QTD Opps 69%, Bumps 81%. The gap between activity and meeting-conversion is where to coach.</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>Zero meetings in Salesloft + 1.19% InMail acceptance — are those accepts turning into anything? What happens after the InMail accept?</li>
+<li>What's the workflow when an InMail or call results in interest — are you logging the meeting in Salesloft or somewhere else?</li>
+</ul></div>
+</div>
+<div class="card" id="card-virginia">
+<div class="cardhead">
+<div><div class="repname">Virginia Bingol</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-red">Email List Broken + Opps Stalled</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">5,938</div><div class="asub"><span class="delta delta-down">↓ -726 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">102</div><div class="asub"><span class="delta delta-up">↑ +82 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">233</div><div class="asub"><span class="delta delta-up">↑ +119 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 0.86%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">10,133</div><div class="asub"><span class="delta delta-up">↑ +9,314 W/W</span> &middot; <span style="color:#666;font-size:11px;">44 add / 10,089 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>5,938</td><td>7,500</td><td><span class="pill pill-r">79%</span></td></tr><tr><td>Cold Calls</td><td>102</td><td>100</td><td><span class="pill pill-g">102%</span></td></tr><tr><td>InMails</td><td>233</td><td>200</td><td><span class="pill pill-g">116%</span></td></tr><tr><td>Contacts</td><td>10,133</td><td>150</td><td><span class="pill pill-g">6755%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-red"><div class="rlab">Opps Created</div><div class="rval">2</div><div class="rsub">target: 15 · 13% · <span class="delta delta-down">↓ -3 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Bumps</div><div class="rval">4</div><div class="rsub">target: 10 · 40% · <span class="delta delta-down">↓ -1 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Meetings</div><div class="rval">5</div><div class="rsub"><span class="delta delta-up">↑ +2 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">$6,154</div><div class="rsub"><span class="delta delta-up">↑ $+6,154 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Open Rate</div><div class="rval">11.9%</div><div class="rsub">team avg 16.9% &middot; ↓ -2.5pp W/W &middot; bounce 34.6% ⚠</div></div>
+<div class="rtile tile-red"><div class="rlab">Reply Rate</div><div class="rval">0.20%</div><div class="rsub">team avg 0.45% &middot; ↓ -0.10pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-red"><div class="qlab">Opps Created Projected</div><div class="qval">53%</div><div class="qsub">34 of 93 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-red"><div class="qlab">Bumps Projected</div><div class="qval">62%</div><div class="qsub">28 of 65 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> $6,154</div><div><span class="bklab">QTD Field Bookings:</span> $147,388</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Calls came back to 102.</strong> Recovered from a 20-call prior week. Activity rhythm reset after a clear off-week.</li>
+<li><span class="emoji">🔴</span><strong>Email list quality is broken.</strong> 34.6% bounce rate — 2,056 of 5,938 sent emails never landed. Team avg bounce is 4.8%. Only 463 emails actually opened (11.9% of delivered, lowest on team). This is a data-hygiene issue, not a send-volume one — clean the list before pushing more volume.</li>
+<li><span class="emoji">🔴</span><strong>2 Opps against 15/wk needed = 13%.</strong> QTD Opps pace at 53% (red) — lowest on the team. Below pace on Opps for 4+ consecutive weeks. Has to find 59 Opps in 4 weeks against current 2/wk.</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>Where is the email list coming from? Need to pause Salesloft cadences and clean before sending another 6k that mostly bounce.</li>
+<li>Name 3 specific accounts you expect to convert this month. What needs to happen on each?</li>
+</ul></div>
+</div>
+<div class="card" id="card-aaron">
+<div class="cardhead">
+<div><div class="repname">Aaron Sakhai</div><div class="repsub">Week of May 25, 2026 · vs May 18, 2026</div></div>
+<div class="status status-red">Activity Strong, Output Stalled — 2nd Week</div>
+</div>
+<div class="seclabel">Activity</div>
+<div class="agrid">
+<div class="atile"><div class="alab">Emails</div><div class="aval">7,331</div><div class="asub"><span class="delta delta-up">↑ +1,565 W/W</span></div></div>
+<div class="atile"><div class="alab">Cold Calls</div><div class="aval">102</div><div class="asub"><span class="delta delta-down">↓ -1 W/W</span></div></div>
+<div class="atile"><div class="alab">InMails</div><div class="aval">246</div><div class="asub"><span class="delta delta-down">↓ -21 W/W</span> &middot; <span style="color:#666;font-size:11px;">accept: 0.00%</span></div></div>
+<div class="atile"><div class="alab">Contacts</div><div class="aval">3,231</div><div class="asub"><span class="delta delta-up">↑ +146 W/W</span> &middot; <span style="color:#666;font-size:11px;">192 add / 3,039 mod</span></div></div>
+</div>
+<table class="atargets"><thead><tr><th>Metric</th><th>This Week</th><th>Target</th><th>vs Target</th></tr></thead><tbody><tr><td>Emails</td><td>7,331</td><td>7,500</td><td><span class="pill pill-a">98%</span></td></tr><tr><td>Cold Calls</td><td>102</td><td>100</td><td><span class="pill pill-g">102%</span></td></tr><tr><td>InMails</td><td>246</td><td>200</td><td><span class="pill pill-g">123%</span></td></tr><tr><td>Contacts</td><td>3,231</td><td>150</td><td><span class="pill pill-g">2154%</span></td></tr></tbody></table>
+<div class="seclabel">Weekly Results</div>
+<div class="rgrid">
+<div class="rtile tile-red"><div class="rlab">Opps Created</div><div class="rval">3</div><div class="rsub">target: 13 · 23% · <span class="delta delta-up">↑ +3 W/W</span></div></div>
+<div class="rtile tile-red"><div class="rlab">Bumps</div><div class="rval">3</div><div class="rsub">target: 8 · 38% · <span class="delta delta-up">↑ +1 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Meetings</div><div class="rval">4</div><div class="rsub"><span class="delta delta-up">↑ +1 W/W</span></div></div>
+<div class="rtile tile-neutral"><div class="rlab">Field Bookings</div><div class="rval">—</div><div class="rsub">no booking this week</div></div>
+<div class="rtile tile-amber"><div class="rlab">Open Rate</div><div class="rval">14.8%</div><div class="rsub">team avg 16.9% &middot; ↓ -1.3pp W/W</div></div>
+<div class="rtile tile-red"><div class="rlab">Reply Rate</div><div class="rval">0.30%</div><div class="rsub">team avg 0.45% &middot; ↓ -0.20pp W/W</div></div>
+</div>
+<div class="seclabel">QTD Pacing</div>
+<div class="qgrid">
+<div class="qtile tile-red"><div class="qlab">Opps Created Projected</div><div class="qval">48%</div><div class="qsub">25 of 75 quarterly · weeks elapsed 9/13</div></div>
+<div class="qtile tile-red"><div class="qlab">Bumps Projected</div><div class="qval">61%</div><div class="qsub">22 of 52 quarterly</div></div>
+</div>
+<div class="bkrow"><div><span class="bklab">This Week Bookings:</span> —</div><div><span class="bklab">QTD Field Bookings:</span> $212,897</div></div>
+<div class="seclabel">Coaching Notes <span class="manager-only">(manager only)</span></div>
+<ul class="coach">
+<li><span class="emoji">🟢</span><strong>Activity volume is there.</strong> 8,919 emails (119% of target), 102 calls (102% of target), 246 InMails (123% of target). Top-of-funnel motion is consistent across every channel — effort isn't the issue.</li>
+<li><span class="emoji">🔴</span><strong>Every channel is dead on conversion.</strong> 246 InMails at 0.00% acceptance. 3 Opps vs. 13/wk needed (23%). QTD Opps pace 48% — worst on team. The targeting or messaging needs to change; effort alone isn't moving the funnel.</li>
+<li><span class="emoji">🔴</span><strong>Bumps lag too.</strong> 3 Bumps vs. 8/wk needed (38%). QTD Bumps pace 61% (red). Second consecutive week of activity → output disconnect.</li>
+</ul>
+<div class="ask"><strong>Ask:</strong><ul>
+<li>246 InMails at 0% acceptance is the loudest signal — what's the targeting profile? Who are you InMailing and why?</li>
+<li>Walk me through 2-3 deals you thought would land this week but didn't — common thread?</li>
+</ul></div>
+</div>
+</div>
 </div>
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="showCard('paul')">Paul R.</button>
-  <button class="tab-btn" onclick="showCard('briana')">Briana T.</button>
-  <button class="tab-btn" onclick="showCard('claire')">Claire M.</button>
-  <button class="tab-btn" onclick="showCard('jaxton')">Jaxton D.</button>
-  <button class="tab-btn" onclick="showCard('katie')">Katie Z.</button>
-  <button class="tab-btn" onclick="showCard('virginia')">Virginia B.</button>
-  <button class="tab-btn" onclick="showCard('aaron')">Aaron S.</button>
-</div>
-
-<div class="cards-container">
-
-  <!-- ===================== PAUL ===================== -->
-  <div class="rep-card active" id="card-paul">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Paul Rasimowicz</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-green">Strong Week — 2nd Consecutive</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">11,560</div><div class="delta delta-up">+1,371 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">104</div><div class="delta delta-down">-11 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">207</div><div class="delta delta-up">+4 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">21,194</div><div class="delta delta-flat">345 added / 20,849 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">11,560</td><td class="r">7,500</td><td class="r"><span class="pill pill-g">154% ✓</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">104</td><td class="r">100</td><td class="r"><span class="pill pill-g">104% ✓</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(0.97% accept)</span></td><td class="r">207</td><td class="r">200</td><td class="r"><span class="pill pill-g">104% ✓</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">21,194</td><td class="r">150</td><td class="r"><span class="pill pill-g">✓</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-green">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">12</div><div class="r-target">target: 11</div>
-          <div class="r-delta delta-up">109% of target</div><div class="r-note">-1 vs prior week (13)</div>
-        </div>
-        <div class="result-tile tile-amber">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">8</div><div class="r-target">target: 9</div>
-          <div class="r-delta delta-up">89% of target</div><div class="r-note">+7 vs prior week (1)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">7</div><div class="r-note">Salesloft</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">0.97%</div><div class="r-note">207 sent</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">21.5%</div><div class="r-note">Reply rate: 0.4%</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">—</div><div class="r-note">Not reported this week</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#0f6e56;">91%</div><div class="q-note">78 actual / 139 target — Closing fast</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#a32d2d;">48%</div><div class="q-note">35 actual / 118 target — Biggest gap on team</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">—</div><div class="b-note">Not reported</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">—</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>Back-to-back strong weeks — 13 SAOs last week, 12 this week</strong> — all activity metrics green for the second week running. QTD SAO projected at 91% is the highest on the team. The pipeline work is stacking up.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>SQO bounced back from 1 to 8</strong> — the downstream conversion caught up this week. Still at 89% of target and QTD SQO projected at 48% is the team's largest gap, but the recovery trend is encouraging.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>Field bookings still not reporting</strong> — with strong SAO and SQO output over the last two weeks, understanding where those opportunities sit in the revenue pipeline is important heading into the final stretch of Q2.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> Two strong weeks in a row — what's clicking right now that we can replicate across the team? QTD SQO at 48% projected is the biggest gap despite 8 this week — what does the pipeline look like and what's needed to accelerate conversion? And field bookings — can we get that data in this week?</div>
-    </div>
-  </div>
-
-  <!-- ===================== BRIANA ===================== -->
-  <div class="rep-card" id="card-briana">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Briana Torres</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-green">Best SAO Week — $115K Bookings</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">6,300</div><div class="delta delta-down">-701 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">105</div><div class="delta delta-down">-13 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">401</div><div class="delta delta-up">+26 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">120</div><div class="delta delta-flat">77 added / 43 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">6,300</td><td class="r">7,500</td><td class="r"><span class="pill pill-a">84%</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">105</td><td class="r">100</td><td class="r"><span class="pill pill-g">105% ✓</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(2.24% accept)</span></td><td class="r">401</td><td class="r">200</td><td class="r"><span class="pill pill-g">201% ✓</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">120</td><td class="r">150</td><td class="r"><span class="pill pill-a">80%</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-green">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">8</div><div class="r-target">target: 7</div>
-          <div class="r-delta delta-up">114% of target</div><div class="r-note">+2 vs prior week (6)</div>
-        </div>
-        <div class="result-tile tile-amber">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">3</div><div class="r-target">target: 5</div>
-          <div class="r-delta delta-down">60% of target</div><div class="r-note">-2 vs prior week (5)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">11</div><div class="r-note">Salesloft — 2nd on team</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">$115,419</div><div class="r-note">Leads team this week</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">2.24%</div><div class="r-note">Best on team</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">19.3%</div><div class="r-note">Reply rate: 0.1%</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#854f0b;">73%</div><div class="q-note">39 actual / 87 target — Closing gap</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#854f0b;">60%</div><div class="q-note">26 actual / 71 target — Behind</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">$115,419</div><div class="b-note">Leads team this week</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">$411,610</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>Best SAO week of the quarter at 8 (114% of target)</strong> — 401 InMails at 2.24% acceptance (best on team), $115,419 in bookings leads the team, and 11 meetings booked. This is an across-the-board strong week.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>SQOs dropped back to 3 after last week's 5</strong> — with 8 new SAOs this week and strong meeting volume, advancing those opps downstream next week is the priority. QTD SQO projected at 60%.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>Emails (84%) and contacts (51%) below target</strong> — the InMail channel is carrying a lot of the outreach weight. Worth keeping email volume up even when InMail is performing well.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> Best SAO week of the quarter — what drove that this week? With 8 new SAOs and strong meeting volume, how many of those are set up to convert to SQOs next week? QTD SAO is now at 73% — what does a realistic path to 85%+ look like in the remaining weeks?</div>
-    </div>
-  </div>
-
-  <!-- ===================== CLAIRE ===================== -->
-  <div class="rep-card" id="card-claire">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Claire McDonough</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-green">Consistent — 100% QTD SQO</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">8,362</div><div class="delta delta-down">-1,269 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">101</div><div class="delta delta-down">-2 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">297</div><div class="delta delta-down">-113 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">352</div><div class="delta delta-flat">91 added / 261 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">8,362</td><td class="r">7,500</td><td class="r"><span class="pill pill-g">111% ✓</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">101</td><td class="r">100</td><td class="r"><span class="pill pill-g">101% ✓</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(1.35% accept)</span></td><td class="r">297</td><td class="r">200</td><td class="r"><span class="pill pill-g">149% ✓</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">352</td><td class="r">150</td><td class="r"><span class="pill pill-g">235% ✓</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-green">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">6</div><div class="r-target">target: 5</div>
-          <div class="r-delta delta-flat">120% of target</div><div class="r-note">Flat vs prior week (6)</div>
-        </div>
-        <div class="result-tile tile-green">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">4</div><div class="r-target">target: 4</div>
-          <div class="r-delta delta-up">100% of target</div><div class="r-note">+3 vs prior week (1)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">1</div><div class="r-note">Salesloft</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">—</div><div class="r-note">Not reported this week</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">15.3%</div><div class="r-note">Reply rate: 0.3%</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">1.35%</div><div class="r-note">297 sent</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#854f0b;">89%</div><div class="q-note">39 actual / 71 target — Close</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#0f6e56;">100%</div><div class="q-note">32 actual / 52 target — Only rep at 100%</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">—</div><div class="b-note">Not reported</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">$197,306</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>Still the only rep at 100% projected QTD SQO</strong> — 4 SQOs this week at 100% of target after last week's 1. 6 SAOs at 120% of target for two consecutive weeks. Three activity metrics green. Claire's pipeline consistency is the standard for the team.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>Contacts added below target (91 vs 150)</strong> — the only activity metric in yellow. With pipeline metrics strong, this is a minor flag but worth keeping an eye on for future pipeline health.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>Only 1 meeting logged this week</strong> — with 6 SAOs and 4 SQOs coming through, the pipeline is moving through other channels, but low meeting count could limit downstream volume in coming weeks.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> Back at 100% QTD SQO projected — what's driving the pipeline advancement so consistently? With only 1 meeting logged this week, how are SAOs and SQOs being generated — outbound sequences directly converting? And field bookings not reporting — what's in the pipeline that could close before end of Q2?</div>
-    </div>
-  </div>
-
-  <!-- ===================== JAXTON ===================== -->
-  <div class="rep-card" id="card-jaxton">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Jaxton Doher</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-green">Strong Bounce-Back — 6 SAOs, 6 SQOs</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">5,291</div><div class="delta delta-down">-2,572 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">115</div><div class="delta delta-up">+29 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">267</div><div class="delta delta-down">-196 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">210</div><div class="delta delta-flat">152 added / 58 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">5,291</td><td class="r">7,500</td><td class="r"><span class="pill pill-a">71%</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">115</td><td class="r">100</td><td class="r"><span class="pill pill-g">115% ✓</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(0% accept)</span></td><td class="r">267</td><td class="r">200</td><td class="r"><span class="pill pill-g">134% ✓</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">210</td><td class="r">150</td><td class="r"><span class="pill pill-g">140% ✓</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-green">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">6</div><div class="r-target">target: 5</div>
-          <div class="r-delta delta-up">120% of target</div><div class="r-note">+4 vs prior week (2)</div>
-        </div>
-        <div class="result-tile tile-green">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">6</div><div class="r-target">target: 4</div>
-          <div class="r-delta delta-up">150% of target</div><div class="r-note">+3 vs prior week (3)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">3</div><div class="r-note">Salesloft</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">—</div><div class="r-note">Not reported this week</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">9.4%</div><div class="r-note">Reply rate: 0.1%</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">0%</div><div class="r-note">267 sent — no accepts</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#854f0b;">78%</div><div class="q-note">34 actual / 71 target — Improving</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#854f0b;">77%</div><div class="q-note">27 actual / 57 target — Improving</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">—</div><div class="b-note">Not reported</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">$13,734</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>Strong recovery — 6 SAOs and 6 SQOs in the same week</strong> — best combined SAO/SQO output on the team this week. After two weeks of low SAO conversion, the pipeline is moving again. QTD SAO and SQO both improving toward target.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>Email volume dropped to 5,291 (71% of target)</strong> — calls and InMails are holding, but email volume needs to recover. With the SAO/SQO numbers this week, it's not an emergency, but keeping all channels up will protect next week's output.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>InMail acceptance at 0% on 267 sent</strong> — same pattern from last week. High volume with no accepts suggests the targeting or messaging on LinkedIn needs a refresh.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> Great bounce-back week — 6 SAOs and 6 SQOs after last week's struggles. What changed? Email volume dropped to 5,291 — anything blocking the sequences? InMail accept rate at 0% for the second week — what's the targeting approach and is there a template or persona we should test?</div>
-    </div>
-  </div>
-
-  <!-- ===================== KATIE ===================== -->
-  <div class="rep-card" id="card-katie">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Katie Zimmerman</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-amber">Mixed — SQOs and Contacts Light</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">9,775</div><div class="delta delta-up">+1,080 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">103</div><div class="delta delta-up">+18 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">290</div><div class="delta delta-up">+106 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">5</div><div class="delta delta-down">5 added / 0 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">9,775</td><td class="r">7,500</td><td class="r"><span class="pill pill-g">130% ✓</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">103</td><td class="r">100</td><td class="r"><span class="pill pill-g">103% ✓</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(0% accept)</span></td><td class="r">290</td><td class="r">200</td><td class="r"><span class="pill pill-g">145% ✓</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">5</td><td class="r">150</td><td class="r"><span class="pill pill-r">3% ⚠</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-amber">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">5</div><div class="r-target">target: 6</div>
-          <div class="r-delta delta-down">83% of target</div><div class="r-note">-2 vs prior week (7)</div>
-        </div>
-        <div class="result-tile tile-amber">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">2</div><div class="r-target">target: 5</div>
-          <div class="r-delta delta-up">40% of target</div><div class="r-note">+2 vs prior week (—)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">13</div><div class="r-note">Salesloft — highest on team</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">$7,700</div><div class="r-note">First booking this week</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">27.7%</div><div class="r-note">Highest on team</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">0%</div><div class="r-note">290 sent — no accepts</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#854f0b;">98%</div><div class="q-note">44 actual / 73 target — Nearly there</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#854f0b;">61%</div><div class="q-note">24 actual / 64 target — Push needed</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">$7,700</div><div class="b-note">vs — prior week</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">$32,044</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>27.7% open rate — highest on the team — and 13 meetings booked</strong> — strongest meeting volume on the roster. QTD SAO projected at 98% is nearly on track. Email and call volumes both strong this week.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>SQO at 2 this week (40% of target)</strong> — with 13 meetings and 5 SAOs, the pipeline advancement isn't keeping pace. QTD SQO projected at 61% with a few weeks left in Q2. The meetings are there — the conversion to SQO is the gap.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🔴</span><div class="coaching-text"><strong>Contacts added: 5 (3% of target)</strong> — sharp drop from 135 last week. This will affect future pipeline health if it continues. Worth understanding what happened here this week.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> 13 meetings is the highest on the team — how are those converting? With 5 SAOs and only 2 SQOs, where are the opps stalling in the pipeline? Contacts dropped from 135 to 5 this week — what happened there? And InMail acceptance at 0% on 290 sent — what's the outreach targeting on LinkedIn?</div>
-    </div>
-  </div>
-
-  <!-- ===================== VIRGINIA ===================== -->
-  <div class="rep-card" id="card-virginia">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Virginia Bingol</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-amber">Partial Recovery — Calls Still Light</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">6,664</div><div class="delta delta-up">+771 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">20</div><div class="delta delta-up">+2 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">114</div><div class="delta delta-up">+83 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">819</div><div class="delta delta-flat">85 added / 734 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">6,664</td><td class="r">7,500</td><td class="r"><span class="pill pill-a">89%</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">20</td><td class="r">100</td><td class="r"><span class="pill pill-r">20% ⚠</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(1.75% accept)</span></td><td class="r">114</td><td class="r">200</td><td class="r"><span class="pill pill-a">57%</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">819</td><td class="r">150</td><td class="r"><span class="pill pill-g">✓</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-amber">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">5</div><div class="r-target">target: 6</div>
-          <div class="r-delta delta-flat">83% of target</div><div class="r-note">Flat vs prior week (5)</div>
-        </div>
-        <div class="result-tile tile-green">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">5</div><div class="r-target">target: 5</div>
-          <div class="r-delta delta-up">100% of target</div><div class="r-note">+4 vs prior week (1)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">3</div><div class="r-note">Salesloft</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">—</div><div class="r-note">Not reported this week</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">1.75%</div><div class="r-note">Good rate — volume is the gap</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">14.4%</div><div class="r-note">Reply rate: 0.3%</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#854f0b;">65%</div><div class="q-note">32 actual / 80 target — Behind</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#854f0b;">60%</div><div class="q-note">24 actual / 65 target — Behind</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">—</div><div class="b-note">Not reported</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">$153,648</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>5 SQOs at 100% of target — strong recovery from last week's 1</strong>. SAOs holding steady at 5. InMail acceptance rate of 1.75% is solid and emails recovered slightly. The output metrics are improving.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🔴</span><div class="coaching-text"><strong>Calls remain critically low — 20 this week vs target of 100 (20%)</strong> — this is the second consecutive week with calls well below target. Last week's explanation was needed; two weeks of the same pattern requires a direct conversation about what's happening.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🟡</span><div class="coaching-text"><strong>InMail volume at 114 (57% of target)</strong> — the acceptance rate is good (1.75%), meaning the messaging works when it's sent. Doubling InMail volume would likely double the accepts. Same story with contacts at 57%.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> Calls are at 20 for the second week in a row — what is specifically blocking this? We need to understand the root cause. The good news is your SQO output (5, 100%) shows the pipeline is advancing — how are you creating opps with limited outbound activity? And what would it take to get calls back to 100 next week?</div>
-    </div>
-  </div>
-
-  <!-- ===================== AARON ===================== -->
-  <div class="rep-card" id="card-aaron">
-    <div class="card-header">
-      <div class="card-header-top">
-        <div><h2>Aaron Sakhai</h2><div class="week-label">Week of May 25 · vs May 18</div></div>
-        <span class="status-badge status-red">0 SAOs — Needs Immediate Attention</span>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Activity</div>
-      <div class="activity-grid">
-        <div class="activity-tile"><div class="label">Emails</div><div class="value">5,766</div><div class="delta delta-down">-3,816 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Cold Calls</div><div class="value">103</div><div class="delta delta-up">+103 vs prior</div></div>
-        <div class="activity-tile"><div class="label">InMails</div><div class="value">267</div><div class="delta delta-up">+267 vs prior</div></div>
-        <div class="activity-tile"><div class="label">Contacts</div><div class="value">3,085</div><div class="delta delta-flat">1 added / 3,084 mod</div></div>
-      </div>
-      <table class="target-table">
-        <thead><tr><th>Metric</th><th class="r">This Week</th><th class="r">Target</th><th class="r">vs Target</th></tr></thead>
-        <tbody>
-          <tr><td>Emails</td><td class="r">5,766</td><td class="r">7,500</td><td class="r"><span class="pill pill-a">77%</span></td></tr>
-          <tr><td>Cold Calls</td><td class="r">103</td><td class="r">100</td><td class="r"><span class="pill pill-g">103% ✓</span></td></tr>
-          <tr><td>InMails <span style="font-size:11px;color:#888;">(0% accept)</span></td><td class="r">267</td><td class="r">200</td><td class="r"><span class="pill pill-g">134% ✓</span></td></tr>
-          <tr><td>Contacts Added/Mod</td><td class="r">3,085</td><td class="r">150</td><td class="r"><span class="pill pill-g">✓</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="section">
-      <div class="section-title">Weekly Results</div>
-      <div class="results-grid">
-        <div class="result-tile tile-red">
-          <div class="r-label">Opps Created (SAO)</div><div class="r-value">0</div><div class="r-target">target: 5</div>
-          <div class="r-delta delta-down">0% of target</div><div class="r-note">-2 vs prior week (2)</div>
-        </div>
-        <div class="result-tile tile-amber">
-          <div class="r-label">Bumps (SQO)</div><div class="r-value">2</div><div class="r-target">target: 4</div>
-          <div class="r-delta delta-flat">50% of target</div><div class="r-note">+2 vs prior week (—)</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Meetings</div><div class="r-value">3</div><div class="r-note">Salesloft</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Open Rate</div><div class="r-value">16.1%</div><div class="r-note">Reply rate: 0.5%</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">InMail Accept</div><div class="r-value">0%</div><div class="r-note">267 sent — no accepts</div>
-        </div>
-        <div class="result-tile tile-neutral">
-          <div class="r-label">Field Bookings</div><div class="r-value" style="font-size:17px;">—</div><div class="r-note">Not reported</div>
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">QTD Pacing</div>
-      <div class="qtd-grid">
-        <div class="qtd-item"><div class="q-label">SAO Projected</div><div class="q-value" style="color:#a32d2d;">50%</div><div class="q-note">22 actual / 71 target — Behind</div></div>
-        <div class="qtd-item"><div class="q-label">SQO Projected</div><div class="q-value" style="color:#854f0b;">59%</div><div class="q-note">19 actual / 52 target — Behind</div></div>
-      </div>
-      <div class="bookings-row">
-        <div class="bookings-tile"><div class="b-label">This Week</div><div class="b-value">—</div><div class="b-note">Not reported</div></div>
-        <div class="bookings-tile"><div class="b-label">QTD Field Bookings</div><div class="b-value">$212,897</div><div class="b-note">Active — On Quota</div></div>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-title">Coaching Notes</div>
-      <div class="coaching-item"><span class="coaching-icon">🟢</span><div class="coaching-text"><strong>Calls and InMails returned this week</strong> — 103 calls (103% of target) and 267 InMails (134% of target). After two weeks of zero on both, those channels are active again. 2 SQOs logged as well. QTD bookings at $212,897 still leads the team.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🔴</span><div class="coaching-text"><strong>Zero SAOs this week — QTD projected at 50%</strong> — calls and InMails came back but zero opps were created. With 103 calls, 267 InMails, and 3 meetings, the activity exists but it's not converting. This is the most pressing issue on Aaron's card right now.</div></div>
-      <div class="coaching-item"><span class="coaching-icon">🔴</span><div class="coaching-text"><strong>InMail acceptance at 0% and only 1 contact added</strong> — 267 InMails sent with no acceptance suggests the targeting or messaging isn't landing. Only 1 net new contact added despite high outreach volume means the prospecting database isn't expanding.</div></div>
-      <div class="ask-box"><strong>Ask:</strong> Calls and InMails came back — what changed from last two weeks? Zero SAOs despite 103 calls and 3 meetings — walk me through those conversations. What's the disconnect between the activity and the opp creation? InMail acceptance at 0% on 267 sent — what is the targeting profile and what message are you sending? And where does the QTD pipeline stand — what opps are active that could close before end of Q2?</div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  function showCard(repId) {
-    document.querySelectorAll('.rep-card').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('card-' + repId).classList.add('active');
-    event.target.classList.add('active');
-  }
-</script>
-</body>
-</html>
+    <script>
+    function showRep(repId) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      const card = document.getElementById('card-' + repId);
+      if (card) card.classList.add('active');
+      document.querySelectorAll('.tab[data-rep="' + repId + '"]').forEach(t => t.classList.add('active'));
+    }
+    </script>
+    
+</body></html>
